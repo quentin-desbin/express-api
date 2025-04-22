@@ -5,10 +5,36 @@ info:
   version: 1.0.0
 
 paths:
+  /v1/users/login:
+    post:
+      summary: 'Login user'
+      operationId: 'loginUser'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+      responses:
+        '200':
+          description: 'User logged in successfully'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
   /v1/users:
     get:
       summary: 'Get all users'
       operationId: 'getAllUsers'
+      security:
+        - bearerAuth: [ ]
       responses:
         '400':
           $ref: '#/components/responses/BadRequest'
@@ -39,6 +65,17 @@ paths:
           description: 'User created successfully'
 
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Set your JWT token
+    apiKey:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+
   responses:
     BadRequest:
       description: 'Bad request'
@@ -77,12 +114,16 @@ components:
           format: email
     UserCreation:
       type: object
-      required: [firstName, lastName, email]
+      required: [firstName, lastName, email, password]
       properties:
         firstName:
           type: string
+          minLength: 1
         lastName:
           type: string
+          minLength: 1
         email:
           type: string
           format: email
+        password:
+          type: string
