@@ -1,0 +1,88 @@
+openapi: 3.0.1
+info:
+  title: Orders API
+  description: API to manage users, their orders and items
+  version: 1.0.0
+
+paths:
+  /v1/users:
+    get:
+      summary: 'Get all users'
+      operationId: 'getAllUsers'
+      responses:
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '200':
+          description: 'List of users'
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Collection'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/User'
+    post:
+      summary: 'Create a new user'
+      operationId: 'createUser'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreation'
+      responses:
+        '201':
+          description: 'User created successfully'
+
+components:
+  responses:
+    BadRequest:
+      description: 'Bad request'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Error:
+      type: object
+      required: [success, message]
+      properties:
+        success:
+          type: boolean
+          default: false
+        message:
+          type: string
+    Collection:
+      type: object
+      required: [success, data]
+      properties:
+        success:
+          type: boolean
+          default: false
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+          format: email
+    UserCreation:
+      type: object
+      required: [firstName, lastName, email]
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+          format: email
