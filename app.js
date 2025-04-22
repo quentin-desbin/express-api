@@ -18,7 +18,7 @@ app.use(
     })
 )
 
-app.use('/users', usersRouter)
+app.use('/v1/users', usersRouter)
 
 // Use a global customized error middleware
 app.use(errorMiddleware)
