@@ -1,9 +1,13 @@
 import express from 'express'
-import {getAllUsers, createUser, loginUser} from '../controllers/users.controller.js'
+import { getAllUsers, createUser, loginUser } from '../controllers/users.controller.js'
+import authMiddleware from '../middlewares/auth.middleware.js'
 
 const router = express.Router()
 
-router.get('/', getAllUsers)
+// Protected routes
+router.get('/', authMiddleware, getAllUsers)
+
+// Public routes
 router.post('/', createUser)
 router.post('/login', loginUser)
 
