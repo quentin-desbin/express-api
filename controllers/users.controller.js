@@ -1,25 +1,22 @@
 import { getAll, create } from '../services/users.service.js'
 import APIError from '../errors/APIError.js'
 
-export const getAllUsers = (req, res) => {
+export const getAllUsers = async (req, res) => {
     res.json({
         success: true,
-        users: getAll()
+        users: await getAll()
     })
 }
 
-export const createUser = (req, res) => {
-    const { firstName, lastName } = req.body
-
-    if (!firstName || !lastName) {
-        throw new APIError('First name and last name is required', 400)
-    }
+export const createUser = async (req, res) => {
+    const { firstName, lastName, email } = req.body
 
     // Call the service
-    create({ firstName, lastName })
+    const userCreated = await create({ firstName, lastName, email })
 
     res.status(201).json({
         success: true,
-        message: 'User has been created'
+        message: 'User has been created',
+        user: userCreated
     })
 }
